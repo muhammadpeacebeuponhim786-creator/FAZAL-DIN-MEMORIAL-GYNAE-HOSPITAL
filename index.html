@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blood Tests</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Slideshow background -->
+  <div class="slideshow"></div>
+
+  <!-- Main content -->
+  <div class="container">
+    <h1> Blood Tests</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Select</th>
+          <th>Test Name</th>
+          <th>Amount (Rs.)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td><input type="checkbox" class="test" data-amount="500"></td>
+          <td>HBA1C</td>
+          <td>500</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td><input type="checkbox" class="test" data-amount="200"></td>
+          <td>HB%</td>
+          <td>200</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td><input type="checkbox" class="test" data-amount="150"></td>
+          <td>Blood Group</td>
+          <td>150</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td><input type="checkbox" class="test" data-amount="400"></td>
+          <td>CBC</td>
+          <td>400</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td><input type="checkbox" class="test" data-amount="300"></td>
+          <td>BSR (Blood Sugar Random)</td>
+          <td>300</td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td><input type="checkbox" class="test" data-amount="250"></td>
+          <td>ESR</td>
+          <td>250</td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td><input type="checkbox" class="test" data-amount="600"></td>
+          <td>CRP</td>
+          <td>600</td>
+        </tr>
+        <tr>
+          <td>8</td>
+          <td><input type="checkbox" class="test" data-amount="550"></td>
+          <td>LDH</td>
+          <td>550</td>
+        </tr>
+        <tr>
+          <td>9</td>
+          <td><input type="checkbox" class="test" data-amount="450"></td>
+          <td>Cholesterol</td>
+          <td>450</td>
+        </tr>
+        <tr>
+          <td>10</td>
+          <td><input type="checkbox" class="test" data-amount="350"></td>
+          <td>Uric Acid</td>
+          <td>350</td>
+        </tr>
+        <tr>
+          <td>11</td>
+          <td><input type="checkbox" class="test" data-amount="500"></td>
+          <td>PT</td>
+          <td>500</td>
+        </tr>
+        <tr>
+          <td>12</td>
+          <td><input type="checkbox" class="test" data-amount="600"></td>
+          <td>APTT</td>
+          <td>600</td>
+        </tr>
+        <tr>
+          <td>13</td>
+          <td><input type="checkbox" class="test" data-amount="550"></td>
+          <td>INR</td>
+          <td>550</td>
+        </tr>
+        <tr>
+          <td>14</td>
+          <td><input type="checkbox" class="test" data-amount="1200"></td>
+          <td>Cross Match</td>
+          <td>1200</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="total">Total: Rs. <span id="total">0</span></div>
+
+    <div class="buttons">
+      <button onclick="window.print()"> Print</button>
+      <button onclick="downloadPDF()"> PDF</button>
+    </div>
+  </div>
+
+  <script>
+    const checkboxes = document.querySelectorAll('.test');
+    const totalEl = document.getElementById('total');
+
+    checkboxes.forEach(cb => {
+      cb.addEventListener('change', () => {
+        let total = 0;
+        checkboxes.forEach(c => {
+          if (c.checked) total += parseInt(c.dataset.amount);
+        });
+        totalEl.textContent = total;
+      });
+    });
+
+    function downloadPDF() {
+      alert("PDF download will be added later!");
+    }
+  </script>
+</body>
+</html>
