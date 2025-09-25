@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CityCare Gynae Hospital - Lab Tests</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      margin: 10px;
+      background: #f5faff;
+      color: #111;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+    header img {
+      width: 70px;
+      border-radius: 50%;
+      margin-bottom: 8px;
+      box-shadow: 0 0 8px #00aaff;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 26px;
+      color: #0066ff;
+    }
+    header p {
+      margin: 2px 0;
+      font-size: 13px;
+      color: #444;
+    }
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .controls input, .controls select {
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      background: #fff;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 0 6px rgba(0,0,0,0.1);
+    }
+    th, td {
+      padding: 6px 8px;
+      border: 1px solid #ddd;
+      text-align: center;
+    }
+    th {
+      background: #e6f2ff;
+      color: #0066cc;
+      font-size: 13px;
+    }
+    td label {
+      font-weight: 500;
+    }
+    .category-row th {
+      background: linear-gradient(90deg, #00aaff, #0066ff);
+      color: #fff;
+      text-align: left;
+      font-size: 14px;
+      position: relative;
+    }
+    .select-all {
+      float: right;
+      font-size: 12px;
+      margin-right: 5px;
+    }
+    .selected-list {
+      margin: 12px 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .selected-item {
+      background: linear-gradient(135deg, #e6f2ff, #ffffff);
+      border: 1px solid #00aaff;
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      color: #0066cc;
+      box-shadow: 0 0 6px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .remove-btn {
+      background: #ff4d4d;
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 12px;
+      cursor: pointer;
+      line-height: 16px;
+      text-align: center;
+      padding: 0;
+    }
+    .remove-btn:hover {
+      background: #cc0000;
+    }
+    .total {
+      font-weight: bold;
+      margin-top: 8px;
+      font-size: 16px;
+      color: #0066ff;
+      text-align: center;
+    }
+    .buttons {
+      margin-top: 12px;
+      text-align: center;
+    }
+    .buttons button {
+      margin: 5px;
+      padding: 10px 18px;
+      cursor: pointer;
+      border: none;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: bold;
+      background: linear-gradient(135deg, #00aaff, #0066ff);
+      color: #fff;
+      box-shadow: 0 0 8px #00aaff;
+    }
+    .buttons button:hover {
+      transform: scale(1.03);
+    }
+    /* Futuristic colors for variety */
+    .color-1 { color: #d9534f; }
+    .color-2 { color: #f0ad4e; }
+    .color-3 { color: #5bc0de; }
+    .color-4 { color: #5cb85c; }
+    .color-5 { color: #0275d8; }
+    .color-6 { color: #613d7c; }
+
+    /* Responsive adjustments */
+    @media(max-width: 600px) {
+      table, th, td {
+        font-size: 12px;
+        padding: 5px;
+      }
+      header h1 {
+        font-size: 20px;
+      }
+      .controls input, .controls select {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://via.placeholder.com/70" alt="Hospital Logo">
+    <h1>CityCare Gynae Hospital</h1>
+    <p>123 Main Street, New Delhi, India</p>
+    <p>📞 +91 98765 43210 | ✉️ info@citycarehospital.com</p>
+    <p id="todayDate"></p>
+  </header>
+
+  <div class="controls">
+    <input type="text" id="search" placeholder="🔍 Search tests...">
+    <select id="categoryFilter">
+      <option value="all">🌐 All Categories</option>
+    </select>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>✔</th>
+        <th>#</th>
+        <th>Test</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+    <tbody id="testBody"></tbody>
+  </table>
+
+  <div class="selected-list" id="selectedList"></div>
+
+  <div class="total">
+    Total: Rs.<span id="total">0</span> | Tests Selected: <span id="count">0</span>
+  </div>
+
+  <div class="buttons">
+    <button onclick="printPage()">🖨️ Print</button>
+    <button onclick="downloadPDF()">📄 PDF</button>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    const categories = {
+      "Blood Tests": ["CBC","Lipid Profile","Liver Function","Kidney Function","Thyroid Profile",
+        "Blood Sugar","HbA1c","Vitamin D","Vitamin B12","Calcium"],
+      "Imaging": ["X-Ray","MRI Scan","CT Scan","Ultrasound","Mammogram","Bone Density","PET Scan","Angiography"],
+      "Hormones": ["FSH","LH","Testosterone","Progesterone","Estrogen","Prolactin","Hormone Panel"],
+      "Infectious Diseases": ["Pregnancy Test","HIV Test","Hepatitis B","Hepatitis C","Malaria Test","Dengue Test",
+        "Typhoid Test","COVID-19 RT-PCR","Flu Test","Widal Test"],
+      "Cardio & Neuro": ["ECG","EEG","Echo","Coagulation Profile"],
+      "Pathology & Others": ["Pap Smear","Stool Test","Semen Analysis","Allergy Test","CRP","ESR","Rheumatoid Factor",
+        "ANA Test","Iron Studies","Ferritin","Uric Acid","PSA","Tumor Marker"],
+      "Advanced & Genetic": ["Genetic Test","DNA PCR","Microbiology Culture","Urine Culture","Skin Biopsy","FNAC","Histopathology"]
+    };
+
+    const colors = ["color-1","color-2","color-3","color-4","color-5","color-6"];
+    const tbody = document.getElementById("testBody");
+    const categoryFilter = document.getElementById("categoryFilter");
+    let priceBase = 200, i = 0, testNumber = 1;
+
+    // Populate category filter
+    Object.keys(categories).forEach(cat => {
+      const opt = document.createElement("option");
+      opt.value = cat;
+      opt.textContent = cat;
+      categoryFilter.appendChild(opt);
+    });
+
+    // Build table
+    for (const [category, tests] of Object.entries(categories)) {
+      const catRow = document.createElement("tr");
+      catRow.classList.add("category-row");
+      catRow.dataset.category = category;
+      catRow.innerHTML = `<th colspan="4">${category} 
+        <span class="select-all"><input type="checkbox" onclick="toggleCategory('${category}', this)"> Select All</span>
+      </th>`;
+      tbody.appendChild(catRow);
+
+      tests.forEach(test => {
+        const price = priceBase + (i * 50);
+        const color = colors[i % colors.length];
+        const row = `<tr data-category="${category}">
+          <td><input type="checkbox" class="test" data-price="${price}" data-test="${testNumber}. ${test}"></td>
+          <td>${testNumber}</td>
+          <td class="${color}">${test}</td>
+          <td>Rs.${price}</td>
+        </tr>`;
+        tbody.innerHTML += row;
+        i++; testNumber++;
+      });
+    }
+
+    const totalEl = document.getElementById("total");
+    const countEl = document.getElementById("count");
+    const selectedList = document.getElementById("selectedList");
+    const todayDate = document.getElementById("todayDate");
+    todayDate.textContent = "Date: " + new Date().toLocaleDateString();
+
+    function updateSummary() {
+      let total = 0, count = 0;
+      selectedList.innerHTML = "";
+      document.querySelectorAll('.test').forEach(c => {
+        if (c.checked) {
+          total += parseFloat(c.dataset.price);
+          count++;
+          const div = document.createElement("div");
+          div.classList.add("selected-item");
+          div.innerHTML = `${c.dataset.test} - Rs.${c.dataset.price} 
+            <button class="remove-btn" onclick="removeTest('${c.dataset.test}')">×</button>`;
+          selectedList.appendChild(div);
+        }
+      });
+      totalEl.textContent = total;
+      countEl.textContent = count;
+    }
+
+    function removeTest(testName) {
+      const checkbox = Array.from(document.querySelectorAll('.test'))
+        .find(cb => cb.dataset.test === testName);
+      if (checkbox) checkbox.checked = false;
+      updateSummary();
+    }
+
+    document.addEventListener('change', e => {
+      if (e.target.classList.contains('test')) updateSummary();
+    });
+
+    // Filters
+    function applyFilters() {
+      const filter = document.getElementById("search").value.toLowerCase();
+      const selCategory = categoryFilter.value;
+      const rows = tbody.getElementsByTagName('tr');
+      for (let row of rows) {
+        if (row.classList.contains("category-row")) {
+          row.style.display = (selCategory==="all" || row.dataset.category===selCategory) ? '' : 'none';
+        } else {
+          const text = row.innerText.toLowerCase();
+          const matches = text.includes(filter);
+          const matchesCat = (selCategory==="all" || row.dataset.category===selCategory);
+          row.style.display = (matches && matchesCat) ? '' : 'none';
+        }
+      }
+    }
+    document.getElementById("search").addEventListener('keyup', applyFilters);
+    categoryFilter.addEventListener('change', applyFilters);
+
+    function toggleCategory(category, checkbox) {
+      const rows = tbody.querySelectorAll(`tr[data-category="${category}"] .test`);
+      rows.forEach(cb => cb.checked = checkbox.checked);
+      updateSummary();
+    }
+
+    function printPage() { window.print(); }
+
+    async function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.setFontSize(16);
+      doc.text("CityCare Gynae Hospital", 60, 20);
+      doc.setFontSize(11);
+      doc.text("123 Main Street, New Delhi, India", 10, 30);
+      doc.text(todayDate.textContent, 10, 37);
+      doc.setFontSize(13);
+      doc.text("Receipt - Selected Tests", 10, 50);
+
+      let y = 65, count = 0, total = 0;
+      document.querySelectorAll('.test').forEach(cb => {
+        if (cb.checked) {
+          count++;
+          total += parseFloat(cb.dataset.price);
+          doc.text(cb.dataset.test + " - Rs." + cb.dataset.price, 10, y);
+          y += 8;
+        }
+      });
+      doc.text("Total: Rs." + total + " | Tests Selected: " + count, 10, y + 10);
+      doc.save("Hospital_Receipt.pdf");
+    }
+  </script>
+</body>
+</html>
