@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>FAZAL DIN MEMORIAL GYNAE HOSPITAL </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Floating logo -->
+<a href="index.html" class="floating-logo">
+  <img src="IMG-20250904-WA0005.jpg" alt="FD Logo">
+</a>
+
+<!-- Header -->
+<header class="site-header">
+  <div class="brand">
+    <div class="logo">FD</div>
+    <div>
+      <h1>FAZAL DIN MEMORIAL <span style="color:#4b9fff">GYNAE</span> HOSPITAL </h1>
+      <p>College Road, Narowal ú CARING FOR MOTHERS  & NEWBORNS </p>
+      <p>Administrator: <strong>Dr. Sheeba Saeed</strong></p>
+    </div>
+  </div>
+  <div class="contact">
+    <a href="tel:03004461365" class="btn-phone"><i class="fa-solid fa-phone"></i> SAEED AHMED 0300-4461365</a>
+    <a href="https://wa.me/923004461365" target="_blank" class="btn-whatsapp"><i class="fa-brands fa-whatsapp"></i></a>
+    <a href="#appointment" class="btn-cta">MAKE APPOINTMENT</a>
+  </div>
+</header>
+
+<section id="welcome" class="welcome-section">
+  <h2>Welcome to Our Hospital</h2>
+  <p>We provide compassionate care for mothers & newborns </p>
+</section>
+
+<!-- Services -->
+<section class="services">
+  <h2>OUR SERVICES </h2>
+  <div class="cards">
+    <div class="card"><i class="fa-solid fa-baby"></i><h3>Maternity Care</h3><p>Comprehensive prenatal & postnatal support.</p></div>
+    <div class="card"><i class="fa-solid fa-heart-pulse"></i><h3>Gynecology</h3><p>Expert diagnosis & treatment for womens health.</p></div>
+    <div class="card"><i class="fa-solid fa-vial"></i><h3>Lab Tests</h3><p>Accurate, affordable, and fast test results.</p></div>
+    <div class="card"><i class="fa-solid fa-stethoscope"></i><h3>Consultations</h3><p>Friendly, professional medical advice for families.</p></div>
+  </div>
+</section>
+
+<!-- Doctors -->
+<section class="doctors">
+  <h2>OUR DOCTORS </h2>
+  <div class="doctor-grid">
+    <div class="doctor"><img src="doctor1.jpg" alt="Dr. Sheeba"><h3>Dr. Sheeba Saeed</h3><p>Gynecologist</p></div>
+    <div class="doctor"><img src="doctor2.jpg" alt="Dr. Ali"><h3>Dr. Ali Raza</h3><p>Consultant</p></div>
+  </div>
+</section>
+
+<!-- Nurses -->
+<section class="nurses-section">
+  <h2>OUR NURSING TEAM </h2>
+  <div class="nurses">
+    <div class="nurse-card"><div class="avatar">MI</div><div class="name">Muzdalifa Imtiaz</div></div>
+    <div class="nurse-card"><div class="avatar">N</div><div class="name">Nighat</div></div>
+    <div class="nurse-card"><div class="avatar">S</div><div class="name">Shabana</div></div>
+    <div class="nurse-card"><div class="avatar">A</div><div class="name">Amina</div></div>
+    <div class="nurse-card"><div class="avatar">Z</div><div class="name">Zunaira</div></div>
+  </div>
+  <p class="nurse-note"> Providing 24/7 neonatal support with dedication and care </p>
+</section>
+
+<!-- Facilities -->
+<section class="facilities">
+  <h2>OUR FACILITIES </h2>
+  <div class="facility-grid">
+    <div class="facility"><h3>Modern Operation Theatre</h3></div>
+    <div class="facility"><h3>Labor Rooms</h3></div>
+    <div class="facility"><h3>Well-equipped Lab</h3></div>
+    <div class="facility"><h3>Pharmacy</h3></div>
+  </div>
+</section>
+
+<!-- Tests -->
+<section id="tests" class="tests-section">
+  <h2> AVAILABLE TESTS</h2>
+  <div class="select-all">
+    <label><input type="checkbox" id="selectAll"> <strong>SELECT ALL TESTS</strong></label>
+  </div>
+  <div class="tests-grid">
+    <div>
+      <h3> BLOOD TESTS</h3>
+      <label><input type="checkbox" class="test" value="500" data-name="CBC"> CBC (Rs. 500)</label>
+      <label><input type="checkbox" class="test" value="500" data-name="HB%"> HB% (Rs. 500)</label>
+      <label><input type="checkbox" class="test" value="500" data-name="Blood Group"> Blood Group (Rs. 500)</label>
+      <label><input type="checkbox" class="test" value="500" data-name="BSR"> BSR (Rs. 500)</label>
+      <label><input type="checkbox" class="test" value="500" data-name="ESR"> ESR (Rs. 500)</label>
+    </div>
+    <div>
+      <h3> HORMONE TESTS</h3>
+      <label><input type="checkbox" class="test" value="500" data-name="FSH"> FSH (Rs. 500)</label>
+      <label><input type="checkbox" class="test" value="500" data-name="LH"> LH (Rs. 500)</label>
+      <label><input type="checkbox" class="test" value="500" data-name="Prolactin"> Prolactin (Rs. 500)</label>
+      <label><input type="checkbox" class="test" value="500" data-name="Testosterone"> Testosterone (Rs. 500)</label>
+      <label><input type="checkbox" class="test" value="500" data-name="Progesterone"> Progesterone (Rs. 500)</label>
+      <label><input type="checkbox" class="test" value="500" data-name="Insulin"> Insulin (Rs. 500)</label>
+      <label><input type="checkbox" class="test" value="500" data-name="T3 T4 TSH"> T3 T4 TSH (Rs. 500)</label>
+      <label><input type="checkbox" class="test" value="500" data-name="TSH"> TSH (Rs. 500)</label>
+    </div>
+  </div>
+  <div id="liveTotal"><span id="liveText">0 tests | Total: Rs. 0</span></div>
+  <div id="resultModal"><div id="modalBox"><h3>SELECTED TESTS</h3><div id="modalContent"></div><button onclick="closeModal()">Close</button></div></div>
+</section>
+
+<!-- Location -->
+<section id="location" class="location-section">
+  <div class="location-info">
+    <h2> Our Location</h2>
+    <p>College Road, Narowal  drop by or call ahead for appointments and scans.</p>
+
+    <div class="contact-actions">
+      <a href="tel:03004461365" class="btn-contact"> 0300-4461365</a>
+      <a href="https://wa.me/923004461365" target="_blank" class="btn-whatsapp"> WhatsApp</a>
+    </div>
+
+    <div class="details">
+      <p><strong>Visiting Hours:</strong><br>MonSun ú 9:00 AM  9:00 PM</p>
+      <p><strong>Administrator:</strong> Dr. Sheeba Saeed</p>
+    </div>
+  </div>
+
+  <div class="map">
+    <iframe src="https://www.google.com/maps?q=32.0950213,74.8813913&hl=en&z=16&output=embed" width="100%" height="400" style="border:0; border-radius:12px;" allowfullscreen="" loading="lazy"></iframe>
+    <p style="text-align:center; margin-top:10px;">
+      <a href="https://maps.google.com/?q=32.0999,74.8731" target="_blank" style="color:#0077b6; font-weight:600; text-decoration:none;"> Open in Google Maps</a>
+    </p>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div><h3>FAZAL DIN MEMORIAL GYNAE HOSPITAL </h3><p>College Road, Narowal</p></div>
+  <div><p> <span id="year"></span> ALL RIGHTS RESERVED</p><p>MADE WITH  FOR THE COMMUNITY</p></div>
+  <div class="social">
+    <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
+    <a href="#" class="instagram"><i class="fab fa-instagram"></i></a>
+    <a href="https://wa.me/923004461365" class="whatsapp"><i class="fab fa-whatsapp"></i></a>
+  </div>
+</footer>
+
+<!-- External JS -->
+<script src="script.js"></script>
+</body>
+</html>
