@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Futuristic Hospital Lab Tests</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      margin: 20px;
+      background: #0d1117;
+      color: #e6edf3;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    header img {
+      width: 90px;
+      margin-bottom: 10px;
+      border-radius: 50%;
+      box-shadow: 0 0 15px cyan;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 32px;
+      color: cyan;
+      text-shadow: 0 0 10px cyan;
+    }
+    header p {
+      margin: 3px 0;
+      font-size: 14px;
+      color: #bbb;
+    }
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .controls input, .controls select {
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      background: #161b22;
+      color: #fff;
+      box-shadow: 0 0 10px #00ffcc;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 15px;
+      background: #161b22;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 10px;
+      border: 1px solid #30363d;
+      text-align: left;
+    }
+    th {
+      background: #21262d;
+      color: #00ffcc;
+      text-transform: uppercase;
+      font-size: 14px;
+    }
+    td label {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      font-weight: bold;
+    }
+    .category-row th {
+      background: linear-gradient(90deg, #00ffcc, #0066ff);
+      color: white;
+      text-align: center;
+      font-size: 16px;
+      letter-spacing: 1px;
+      text-shadow: 0 0 8px #00ffcc;
+    }
+    .selected-list {
+      margin: 15px 0;
+      padding: 12px;
+      border: 1px solid #30363d;
+      border-radius: 10px;
+      background: #161b22;
+    }
+    .selected-list h3 {
+      margin: 0 0 8px 0;
+      font-size: 18px;
+      color: #00ffcc;
+      text-shadow: 0 0 8px #00ffcc;
+    }
+    .selected-list ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+    .total {
+      font-weight: bold;
+      margin-top: 10px;
+      font-size: 20px;
+      color: #00ffcc;
+      text-shadow: 0 0 10px #00ffcc;
+    }
+    .buttons {
+      margin-top: 15px;
+      text-align: center;
+    }
+    .buttons button {
+      margin: 5px;
+      padding: 12px 25px;
+      cursor: pointer;
+      border: none;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: bold;
+      background: linear-gradient(135deg, #00ffcc, #0066ff);
+      color: #fff;
+      box-shadow: 0 0 12px #00ffcc;
+      transition: 0.3s;
+    }
+    .buttons button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px #00ffcc;
+    }
+    /* Futuristic colors */
+    .color-1 { color: #ff4d4d; }
+    .color-2 { color: #ffa64d; }
+    .color-3 { color: #ffff4d; }
+    .color-4 { color: #4dff88; }
+    .color-5 { color: #4dd2ff; }
+    .color-6 { color: #b84dff; }
+    .price { font-weight: normal; }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="https://via.placeholder.com/90" alt="Hospital Logo">
+    <h1>CityCare Gynae Hospital</h1>
+    <p>123 Main Street, New Delhi, India</p>
+    <p>📞 +91 98765 43210 | ✉️ info@citycarehospital.com</p>
+    <p id="todayDate"></p>
+  </header>
+
+  <div class="controls">
+    <input type="text" id="search" placeholder="🔍 Search futuristic tests...">
+    <select id="categoryFilter">
+      <option value="all">🌐 All Categories</option>
+    </select>
+  </div>
+
+  <table id="testsTable">
+    <thead>
+      <tr>
+        <th>Select</th>
+        <th>Test & Amount</th>
+      </tr>
+    </thead>
+    <tbody id="testBody"></tbody>
+  </table>
+
+  <div class="selected-list" id="selectedList" style="display:none;">
+    <h3>Selected Tests:</h3>
+    <ul id="listItems"></ul>
+  </div>
+
+  <div class="total">Total: ₹<span id="total">0</span></div>
+
+  <div class="buttons">
+    <button onclick="printPage()">🖨️ Print Receipt</button>
+    <button onclick="downloadPDF()">📄 Download PDF</button>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    const categories = {
+      "Blood Tests": [
+        "CBC","Lipid Profile","Liver Function","Kidney Function","Thyroid Profile",
+        "Blood Sugar","HbA1c","Vitamin D","Vitamin B12","Calcium"
+      ],
+      "Imaging": [
+        "X-Ray","MRI Scan","CT Scan","Ultrasound","Mammogram","Bone Density","PET Scan","Angiography"
+      ],
+      "Hormones": [
+        "FSH","LH","Testosterone","Progesterone","Estrogen","Prolactin","Hormone Panel"
+      ],
+      "Infectious Diseases": [
+        "Pregnancy Test","HIV Test","Hepatitis B","Hepatitis C","Malaria Test","Dengue Test",
+        "Typhoid Test","COVID-19 RT-PCR","Flu Test","Widal Test"
+      ],
+      "Cardio & Neuro": [
+        "ECG","EEG","Echo","Coagulation Profile"
+      ],
+      "Pathology & Others": [
+        "Pap Smear","Stool Test","Semen Analysis","Allergy Test","CRP","ESR","Rheumatoid Factor","ANA Test",
+        "Iron Studies","Ferritin","Uric Acid","PSA","Tumor Marker"
+      ],
+      "Advanced & Genetic": [
+        "Genetic Test","DNA PCR","Microbiology Culture","Urine Culture","Skin Biopsy",
+        "FNAC","Histopathology"
+      ]
+    };
+
+    const colors = ["color-1","color-2","color-3","color-4","color-5","color-6"];
+    const tbody = document.getElementById("testBody");
+    const categoryFilter = document.getElementById("categoryFilter");
+
+    // Populate dropdown
+    Object.keys(categories).forEach(cat => {
+      const option = document.createElement("option");
+      option.value = cat;
+      option.textContent = cat;
+      categoryFilter.appendChild(option);
+    });
+
+    let priceBase = 200, i = 0;
+
+    // Generate table rows
+    for (const [category, tests] of Object.entries(categories)) {
+      tbody.innerHTML += `<tr class="category-row" data-category="${category}"><th colspan="2">${category}</th></tr>`;
+      tests.forEach(test => {
+        const price = priceBase + (i * 50);
+        const color = colors[i % colors.length];
+        const row = `<tr data-category="${category}">
+          <td><input type="checkbox" class="test" data-price="${price}"></td>
+          <td><label class="${color}">${test} <span class="price">₹${price}</span></label></td>
+        </tr>`;
+        tbody.innerHTML += row;
+        i++;
+      });
+    }
+
+    const checkboxes = () => document.querySelectorAll('.test');
+    const totalEl = document.getElementById('total');
+    const searchBox = document.getElementById('search');
+    const selectedListDiv = document.getElementById('selectedList');
+    const listItems = document.getElementById('listItems');
+    const todayDate = document.getElementById('todayDate');
+
+    // Show today's date
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    todayDate.textContent = "Date: " + new Date().toLocaleDateString(undefined, options);
+
+    function updateSummary() {
+      let total = 0;
+      listItems.innerHTML = "";
+      let hasSelection = false;
+
+      checkboxes().forEach(c => {
+        if (c.checked) {
+          total += parseFloat(c.dataset.price);
+          const label = c.parentElement.nextElementSibling.innerText;
+          const li = document.createElement("li");
+          li.textContent = label;
+          listItems.appendChild(li);
+          hasSelection = true;
+        }
+      });
+
+      totalEl.textContent = total;
+      selectedListDiv.style.display = hasSelection ? "block" : "none";
+    }
+
+    document.addEventListener('change', e => {
+      if (e.target.classList.contains('test')) updateSummary();
+    });
+
+    // Search filter
+    searchBox.addEventListener('keyup', applyFilters);
+    categoryFilter.addEventListener('change', applyFilters);
+
+    function applyFilters() {
+      const filter = searchBox.value.toLowerCase();
+      const selectedCategory = categoryFilter.value;
+      const rows = tbody.getElementsByTagName('tr');
+
+      for (let row of rows) {
+        if (row.classList.contains("category-row")) {
+          // Show/hide category headers
+          row.style.display = (selectedCategory === "all" || row.dataset.category === selectedCategory) ? '' : 'none';
+        } else {
+          const text = row.innerText.toLowerCase();
+          const matchesSearch = text.includes(filter);
+          const matchesCategory = (selectedCategory === "all" || row.dataset.category === selectedCategory);
+          row.style.display = (matchesSearch && matchesCategory) ? '' : 'none';
+        }
+      }
+    }
+
+    function printPage() {
+      window.print();
+    }
+
+    async function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      doc.setFontSize(18);
+      doc.text("CityCare Gynae Hospital", 60, 20);
+      doc.setFontSize(11);
+      doc.text("123 Main Street, New Delhi, India", 10, 30);
+      doc.text("Phone: +91 98765 43210 | Email: info@citycarehospital.com", 10, 37);
+      doc.text(todayDate.textContent, 10, 45);
+
+      doc.setFontSize(14);
+      doc.text("Receipt - Selected Tests", 10, 60);
+
+      let y = 75;
+      checkboxes().forEach(cb => {
+        if (cb.checked) {
+          const label = cb.parentElement.nextElementSibling.innerText;
+          doc.text(label, 10, y);
+          y += 10;
+        }
+      });
+
+      doc.setFontSize(14);
+      doc.text("Total: ₹" + totalEl.textContent, 10, y + 10);
+
+      doc.save("Hospital_Receipt.pdf");
+    }
+  </script>
+</body>
+</html>
