@@ -191,15 +191,76 @@
     .card:hover { transform:translateY(-5px); }
     .card i { font-size:40px; color:#0077b6; margin-bottom:10px; }
 
-    /* Doctors */
-    .doctors { padding:60px 20px; }
-    .doctors h2 { text-align:center; margin-bottom:40px; }
-    .doctor-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; }
-    .doctor {
-      background:white; padding:20px; border-radius:12px; text-align:center;
-      box-shadow:0 4px 10px rgba(0,0,0,0.1);
-    }
-    .doctor img { width:100px; height:100px; border-radius:50%; margin-bottom:10px; }
+
+
+.doctors {
+  padding: 60px 20px;
+  background: linear-gradient(135deg, #f9f9ff, #e6f0ff);
+  text-align: center;
+}
+
+.doctors h2 {
+  font-size: 42px;
+  margin-bottom: 40px;
+  color: #222;
+  text-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+}
+
+.doctor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+  justify-items: center;
+}
+
+.doctor-card {
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  padding: 30px 20px;
+  max-width: 320px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.doctor-card:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+}
+
+.doctor-photo img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 5px solid #4a90e2;
+  margin-bottom: 20px;
+  background: #f0f8ff;
+}
+
+.doctor-info h3 {
+  font-size: 24px;
+  color: #333;
+  margin: 10px 0;
+}
+
+.speciality {
+  font-size: 18px;
+  font-weight: bold;
+  color: #4a90e2;
+}
+
+.degree {
+  font-size: 16px;
+  color: #555;
+}
+
+
+
+
+
+
+
+
 
     /* Facilities */
     .facilities { padding:60px 20px; background:#f9f9f9; }
@@ -393,6 +454,64 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- ChatGPT --!>
+	
+	
+	
+	
+	
+	
+	<!-- Doctors -->
+<section class="doctors">
+  <h2>👨‍⚕️👩‍⚕️ Our Doctors</h2>
+  <div class="doctor-grid">
+    
+    <div class="doctor-card">
+      <div class="doctor-photo">
+        <img src="https://cdn-icons-png.flaticon.com/512/3774/3774299.png" alt="Dr. Hamna Sajawal">
+      </div>
+      <div class="doctor-info">
+        <h3>Dr. Hamna Sajawal</h3>
+        <p class="speciality">Gynecologist</p>
+        <p class="degree">M.B.B.S</p>
+      </div>
+    </div>
+    
+    <div class="doctor-card">
+      <div class="doctor-photo">
+        <img src="https://cdn-icons-png.flaticon.com/512/4320/4320341.png" alt="Dr. Abeera Azmat">
+      </div>
+      <div class="doctor-info">
+        <h3>Dr. Abeera Azmat</h3>
+        <p class="speciality">Gynecologist</p>
+        <p class="degree">M.B.B.S</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+	
+	
+	
+	
+	
+	
+	
 
 
 
