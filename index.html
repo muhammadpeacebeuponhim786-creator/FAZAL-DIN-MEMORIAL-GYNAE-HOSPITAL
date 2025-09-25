@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🧪 Blood Tests</title>
+  <style>
+    /* Background Slideshow */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Orbitron', sans-serif;
+      color: #fff;
+      overflow-x: hidden;
+    }
+    .slideshow {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -1;
+      background-size: cover;
+      background-position: center;
+      animation: slideShow 100s infinite;
+    }
+    @keyframes slideShow {
+      0%   { background-image: url('https://images.unsplash.com/photo-1582719478185-2f38c4f1c6c6'); }
+      5%   { background-image: url('https://images.unsplash.com/photo-1600959907703-125f01c3dc49'); }
+      10%  { background-image: url('https://images.unsplash.com/photo-1581092160562-40aa08e78837'); }
+      15%  { background-image: url('https://images.unsplash.com/photo-1588776814546-b20f1c0b5e85'); }
+      20%  { background-image: url('https://images.unsplash.com/photo-1576765607924-3f1de397a9a0'); }
+      25%  { background-image: url('https://images.unsplash.com/photo-1579154203451-0ef3d9b0f0a3'); }
+      30%  { background-image: url('https://images.unsplash.com/photo-1580281657527-47d3f1a8c2f1'); }
+      35%  { background-image: url('https://images.unsplash.com/photo-1587308850383-30a8e1b3ed75'); }
+      40%  { background-image: url('https://images.unsplash.com/photo-1620912189866-730cdce40938'); }
+      45%  { background-image: url('https://images.unsplash.com/photo-1581599837519-9401a6e5c88c'); }
+      50%  { background-image: url('https://images.unsplash.com/photo-1580281657527-47d3f1a8c2f1'); }
+      55%  { background-image: url('https://images.unsplash.com/photo-1588776814546-b20f1c0b5e85'); }
+      60%  { background-image: url('https://images.unsplash.com/photo-1600959907703-125f01c3dc49'); }
+      65%  { background-image: url('https://images.unsplash.com/photo-1582719478185-2f38c4f1c6c6'); }
+      70%  { background-image: url('https://images.unsplash.com/photo-1587308850383-30a8e1b3ed75'); }
+      75%  { background-image: url('https://images.unsplash.com/photo-1576765607924-3f1de397a9a0'); }
+      80%  { background-image: url('https://images.unsplash.com/photo-1620912189866-730cdce40938'); }
+      85%  { background-image: url('https://images.unsplash.com/photo-1581092160562-40aa08e78837'); }
+      90%  { background-image: url('https://images.unsplash.com/photo-1588776814546-b20f1c0b5e85'); }
+      95%  { background-image: url('https://images.unsplash.com/photo-1579154203451-0ef3d9b0f0a3'); }
+      100% { background-image: url('https://images.unsplash.com/photo-1582719478185-2f38c4f1c6c6'); }
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 15px;
+      box-shadow: 0 0 40px cyan;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 60px;
+      color: #0ff;
+      text-shadow: 0 0 20px #0ff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 10px;
+      text-align: center;
+      font-size: 50px;
+    }
+
+    th {
+      background: rgba(0, 255, 255, 0.2);
+      color: #0ff;
+      border-bottom: 3px solid cyan;
+    }
+
+    td {
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+    }
+
+    label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Bigger checkboxes */
+    input[type="checkbox"] {
+      width: 40px;
+      height: 40px;
+      transform: scale(1.5);
+      cursor: pointer;
+    }
+
+    .total {
+      font-size: 50px;
+      font-weight: bold;
+      color: #ff0;
+      margin-top: 20px;
+      text-align: right;
+      text-shadow: 0 0 20px yellow;
+    }
+
+    .buttons {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .buttons button {
+      padding: 15px 30px;
+      font-size: 30px;
+      margin: 10px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      background: linear-gradient(45deg, #0ff, #09f);
+      color: #000;
+      font-weight: bold;
+      box-shadow: 0 0 20px #0ff;
+      transition: 0.3s;
+    }
+
+    .buttons button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 40px #0ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="slideshow"></div>
+  <div class="container">
+    <h1>🧪 Blood Tests</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Select</th>
+          <th>Test Name</th>
+          <th>Amount (Rs.)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><input type="checkbox" class="test" data-price="500"></td><td>HBA1C</td><td>500</td></tr>
+        <tr><td><input type="checkbox" class="test" data-price="300"></td><td>HB%</td><td>300</td></tr>
+        <tr><td><input type="checkbox" class="test" data-price="200"></td><td>Blood Group</td><td>200</td></tr>
+        <tr><td><input type="checkbox" class="test" data-price="600"></td><td>CBC</td><td>600</td></tr>
+        <tr><td><input type="checkbox" class="test" data-price="400"></td><td>BSR</td><td>400</td></tr>
+        <tr><td><input type="checkbox" class="test" data-price="250"></td><td>ESR</td><td>250</td></tr>
+        <tr><td><input type="checkbox" class="test" data-price="700"></td><td>CRP</td><td>700</td></tr>
+        <tr><td><input type="checkbox" class="test" data-price="800"></td><td>LDH</td><td>800</td></tr>
+        <tr><td><input type="checkbox" class="test" data-price="350"></td><td>Cholesterol</td><td>350</td></tr>
+        <tr><td><input type="checkbox" class="test" data-price="300"></td><td>Uric Acid</td><td>300</td></tr>
+        <tr><td><input type="checkbox" class="test" data-price="500"></td><td>PT</td><td>500</td></tr>
+        <tr><td><input type="checkbox" class="test" data-price="450"></td><td>APTT</td><td>450</td></tr>
+        <tr><td><input type="checkbox" class="test" data-price="550"></td><td>INR</td><td>550</td></tr>
+        <tr><td><input type="checkbox" class="test" data-price="1000"></td><td>Cross Match</td><td>1000</td></tr>
+      </tbody>
+    </table>
+    <div class="total">Total: Rs. <span id="total">0</span></div>
+    <div class="buttons">
+      <button onclick="printPage()">🖨️ Print</button>
+      <button onclick="downloadPDF()">📄 Download PDF</button>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    const checkboxes = document.querySelectorAll('.test');
+    const totalEl = document.getElementById('total');
+
+    function updateTotal() {
+      let total = 0;
+      checkboxes.forEach(c => {
+        if (c.checked) total += parseFloat(c.dataset.price);
+      });
+      totalEl.textContent = total;
+    }
+
+    checkboxes.forEach(cb => cb.addEventListener('change', updateTotal));
+
+    function printPage() {
+      window.print();
+    }
+
+    async function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      let y = 20;
+      doc.setFontSize(16);
+      doc.text("🧪 Blood Tests Receipt", 10, y);
+      y += 10;
+      checkboxes.forEach(cb => {
+        if (cb.checked) {
+          const label = cb.parentElement.nextElementSibling.textContent;
+          const price = cb.dataset.price;
+          doc.text(`${label} - Rs.${price}`, 10, y);
+          y += 10;
+        }
+      });
+      doc.text("Total: Rs." + totalEl.textContent, 10, y + 10);
+      doc.save("blood-tests.pdf");
+    }
+  </script>
+</body>
+</html>
