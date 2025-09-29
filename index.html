@@ -83,34 +83,76 @@
     
     
         /* Photo Section */
-    .photo-carousel {
-  padding: 50px 20px;
-  text-align: center;
-  background-color: #fdf0f5;
-}
 
-.photo-carousel h2 {
-  margin-bottom: 30px;
-  color: #ff6f91;
-  font-size: 32px;
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .carousel-container {
   position: relative;
-  overflow: hidden;
-  max-width: 1000px;
+  overflow: hidden;         /* Hide other images outside the container */
+  max-width: 1000px;        /* Adjust as needed */
   margin: 0 auto;
   border-radius: 12px;
 }
 
 .carousel-track {
-  display: flex;
+  display: flex;             /* Images sit side by side */
   transition: transform 0.5s ease-in-out;
+  width: 100%;
 }
 
 .carousel-track img {
-  min-width: 100%;
-  height: auto;
+  min-width: 100%;           /* Each image fills the container */
+  height: auto;              /* Maintain aspect ratio */
+  display: block;            /* Remove inline spacing */
   border-radius: 12px;
 }
 
@@ -128,14 +170,9 @@
   z-index: 2;
 }
 
-.prev:hover, .next:hover {
-  background-color: #ff6f91;
-}
-
 .prev { left: 10px; }
 .next { right: 10px; }
 
-/* Dots */
 .carousel-dots {
   margin-top: 15px;
   display: flex;
@@ -157,12 +194,34 @@
   background-color: #ff6f91;
 }
 
-/* Mobile adjustments */
-@media (max-width: 768px) {
-  .photo-carousel h2 {
-    font-size: 24px;
-  }
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
