@@ -639,6 +639,22 @@
 
     /* Floating total */
     #liveTotal{position:fixed; right:20px; bottom:120px; background:var(--accent); color:#fff; padding:12px 16px; border-radius:12px; font-weight:700; box-shadow:0 8px 22px rgba(0,0,0,0.2); z-index:1500; cursor:pointer}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     /* Modal */
     #resultModal{display:none; position:fixed; inset:0; align-items:center; justify-content:center; background:rgba(0,0,0,0.55); z-index:1600}
     #modalBox{background:#fff; padding:18px; border-radius:12px; max-width:680px; width:92%; box-shadow:0 8px 22px rgba(0,0,0,0.18)}
@@ -1597,10 +1613,18 @@
 
 
 
-  <!-- Live Total button -->
-  <div id="liveTotal" title="Click to view selected items">
-    <span id="liveText">0 selected | Total: Rs. 0</span>
+<!-- Floating Bill / Total -->
+<div id="liveTotal">
+  <div id="billContent">
+    <strong>Selected Items:</strong>
+    <ul id="selectedItems"></ul>
+    <strong>Total: Rs. <span id="totalAmount">0</span></strong>
   </div>
+  <!-- Print Bill Button -->
+  <button onclick="printBill()" style="margin-top:8px; padding:6px 12px; border:none; background:#0077b6; color:#fff; border-radius:6px; cursor:pointer;">
+    Print Bill
+  </button>
+</div>
   
   
   
@@ -1992,6 +2016,75 @@ function toggleTests(categoryHeading) {
   const testList = categoryHeading.nextElementSibling;
   testList.style.display = (testList.style.display === "none") ? "block" : "none";
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function updateTotal() {
+  const selectedItems = document.querySelectorAll('.test:checked, .med:checked');
+  const list = document.getElementById('selectedItems');
+  list.innerHTML = ''; // clear previous
+
+  let total = 0;
+  selectedItems.forEach(item => {
+    const name = item.dataset.name;
+    const price = parseInt(item.value);
+    total += price;
+    const li = document.createElement('li');
+    li.textContent = `${name} - Rs. ${price}`;
+    list.appendChild(li);
+  });
+
+  document.getElementById('totalAmount').textContent = total;
+}
+
+// Call updateTotal whenever a checkbox is clicked
+document.querySelectorAll('.test, .med').forEach(el => {
+  el.addEventListener('change', updateTotal);
+});
+
+// Print bill function
+function printBill() {
+  const content = document.getElementById('billContent').innerHTML;
+  const myWindow = window.open('', '', 'width=600,height=700');
+  myWindow.document.write('<html><head><title>Bill</title></head><body>');
+  myWindow.document.write('<h2>FAZAL DIN MEMORIAL GYNAE HOSPITAL</h2>');
+  myWindow.document.write(content);
+  myWindow.document.write('</body></html>');
+  myWindow.document.close();
+  myWindow.print();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 </script>
 
 
