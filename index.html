@@ -55,6 +55,137 @@
     .cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:18px;}
     .card{padding:18px; background:#fff; border-radius:10px; box-shadow:0 6px 18px rgba(2,6,23,0.04); text-align:center;}
     .card i{font-size:28px; color:var(--accent); margin-bottom:8px;}
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+        /* Photo Section */
+    .photo-carousel {
+  padding: 50px 20px;
+  text-align: center;
+  background-color: #fdf0f5;
+}
+
+.photo-carousel h2 {
+  margin-bottom: 30px;
+  color: #ff6f91;
+  font-size: 32px;
+}
+
+.carousel-container {
+  position: relative;
+  overflow: hidden;
+  max-width: 1000px;
+  margin: 0 auto;
+  border-radius: 12px;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.carousel-track img {
+  min-width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+.prev, .next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(255,111,145,0.8);
+  border: none;
+  color: white;
+  font-size: 24px;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.prev:hover, .next:hover {
+  background-color: #ff6f91;
+}
+
+.prev { left: 10px; }
+.next { right: 10px; }
+
+/* Dots */
+.carousel-dots {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.carousel-dots .dot {
+  height: 12px;
+  width: 12px;
+  background-color: #ff6f91aa;
+  border-radius: 50%;
+  display: inline-block;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.carousel-dots .dot.active {
+  background-color: #ff6f91;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .photo-carousel h2 {
+    font-size: 24px;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /* Doctors */
     .doctors{text-align:center;margin:20px auto;max-width:900px;background:#2e1a47;border-radius:16px;padding:24px;box-shadow:0 6px 20px rgba(0,0,0,0.25);color:#f3eaff;}
@@ -150,6 +281,108 @@
       <div class="card"><i class="fa-solid fa-stethoscope"></i><h3>Consultations</h3><p>Friendly, professional medical advice for families.</p></div>
     </div>
   </section>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <!-- Carousel Section with Dots -->
+<section class="photo-carousel">
+  <h2>Our Facilities</h2>
+  <div class="carousel-container">
+    <div class="carousel-track">
+      <img src="images/IMG-20250904-WA0005.jpg" alt="Hospital Photo 1">
+      <img src="images/IMG-20250912-WA0082.jpg" alt="Hospital Photo 2">
+      <img src="images/IMG-20250917-WA0116.jpeg" alt="Hospital Photo 3">
+      <img src="images/IMG-20250917-WA0122.jpeg" alt="Hospital Photo 4">
+      <img src="images/IMG-20250918-WA0062.jpg" alt="Hospital Photo 5">
+      <img src="images/IMG-20250918-WA0063.jpg" alt="Hospital Photo 6">
+      <img src="images/IMG-20250926-WA0063.jpeg" alt="Hospital Photo 7">
+      <img src="images/IMG-20250918-WA0064.jpg" alt="Hospital Photo 8">
+      <img src="images/IMG-20250918-WA0065.jpg" alt="Hospital Photo 9">
+      <img src="images/IMG-20250918-WA0066.jpg" alt="Hospital Photo 10">
+      <img src="images/IMG-20250925-WA0008.jpeg" alt="Hospital Photo 11">
+      <img src="images/IMG-20250925-WA0013.jpeg" alt="Hospital Photo 12">
+      <img src="images/IMG-20250926-WA0043.jpeg" alt="Hospital Photo 13">
+      <img src="images/IMG-20250926-WA0045.jpeg" alt="Hospital Photo 14">
+      <img src="images/IMG-20250926-WA0135.jpeg" alt="Hospital Photo 15">
+      <img src="images/IMG-20250927-WA0127.jpeg" alt="Hospital Photo 16">
+      <img src="images/images (1).jpeg" alt="Hospital Photo 17">
+      <img src="images/images (2).jpeg" alt="Hospital Photo 18">
+      <img src="images/images (5)~2.jpg" alt="Hospital Photo 19">
+    </div>
+    <button class="prev">&#10094;</button>
+    <button class="next">&#10095;</button>
+  </div>
+
+  <!-- Dots -->
+  <div class="carousel-dots"></div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   <!-- Doctors -->
   <section class="section doctors">
@@ -376,29 +609,94 @@
     </div>
   </div>
 
-  <script>
-    // Toggle test lists
-    function toggleTests(el){
-      const list = el.nextElementSibling;
-      if(list.style.display==="none"){ list.style.display="block"; }
-      else{ list.style.display="none"; }
+// ------------------------------
+// Test List & Modal Functions
+// ------------------------------
+function toggleTests(el){
+  const list = el.nextElementSibling;
+  if(list.style.display === "none"){
+    list.style.display = "block";
+  } else {
+    list.style.display = "none";
+  }
+}
+
+function showModal(){
+  const modal = document.getElementById("resultModal");
+  const content = document.getElementById("modalContent");
+  let html = "";
+  document.querySelectorAll(".test:checked, .med-checkbox:checked").forEach(i=>{
+    html += i.dataset.name + " - Rs." + i.value + "<br>";
+  });
+  content.innerHTML = html || "No items selected";
+  modal.style.display = "flex";
+}
+
+function clearSelections(){
+  document.querySelectorAll(".test, .med-checkbox").forEach(i=>i.checked=false);
+  document.getElementById("modalContent").innerHTML = "No items selected";
+}
+
+// ------------------------------
+// Carousel Functions
+// ------------------------------
+document.addEventListener("DOMContentLoaded", function() {
+  const track = document.querySelector('.carousel-track');
+  if (!track) return; // Exit if carousel not present
+  const slides = Array.from(track.children);
+  const nextButton = document.querySelector('.next');
+  const prevButton = document.querySelector('.prev');
+  const dotsContainer = document.querySelector('.carousel-dots');
+
+  let currentIndex = 0;
+
+  // Generate dots dynamically
+  slides.forEach((_, idx) => {
+    const dot = document.createElement('span');
+    dot.classList.add('dot');
+    if(idx === 0) dot.classList.add('active');
+    dot.addEventListener('click', () => {
+      currentIndex = idx;
+      updateCarousel();
+    });
+    dotsContainer.appendChild(dot);
+  });
+
+  const dots = Array.from(dotsContainer.children);
+
+  function updateCarousel() {
+    const width = slides[0].getBoundingClientRect().width;
+    track.style.transform = 'translateX(-' + (currentIndex * width) + 'px)';
+    dots.forEach(dot => dot.classList.remove('active'));
+    dots[currentIndex].classList.add('active');
+  }
+
+  // Arrow buttons
+  nextButton.addEventListener('click', () => {
+    currentIndex = (currentIndex + 1) % slides.length;
+    updateCarousel();
+  });
+
+  prevButton.addEventListener('click', () => {
+    currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+    updateCarousel();
+  });
+
+  // Swipe support for mobile
+  let startX = 0;
+  track.addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+  });
+  track.addEventListener('touchend', e => {
+    let endX = e.changedTouches[0].clientX;
+    if (startX - endX > 50) {
+      currentIndex = (currentIndex + 1) % slides.length;
+    } else if (endX - startX > 50) {
+      currentIndex = (currentIndex - 1 + slides.length) % slides.length;
     }
-    // Modal for total
-    function showModal(){
-      const modal = document.getElementById("resultModal");
-      const content = document.getElementById("modalContent");
-      let html = "";
-      document.querySelectorAll(".test:checked, .med-checkbox:checked").forEach(i=>{
-        html += i.dataset.name + " - Rs."+i.value+"<br>";
-      });
-      content.innerHTML = html || "No items selected";
-      modal.style.display="flex";
-    }
-    function clearSelections(){
-      document.querySelectorAll(".test, .med-checkbox").forEach(i=>i.checked=false);
-      document.getElementById("modalContent").innerHTML="No items selected";
-    }
-  </script>
+    updateCarousel();
+  });
+});
 
 </body>
 </html>
