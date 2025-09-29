@@ -86,55 +86,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 .carousel-container {
   position: relative;
   overflow: hidden;         /* Hide other images outside the container */
@@ -144,9 +95,10 @@
 }
 
 .carousel-track {
-  display: flex;             /* Images sit side by side */
+  display: flex;
   transition: transform 0.5s ease-in-out;
-  width: 100%;
+  /* Remove width:100% */
+  /* width: 100%; */ 
 }
 
 .carousel-track img {
@@ -803,6 +755,70 @@
       updateCarousel();
     });
   });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+window.onload = function() {
+  const track = document.querySelector('.carousel-track');
+  const slides = Array.from(track.children);
+  const nextButton = document.querySelector('.next');
+  const prevButton = document.querySelector('.prev');
+  const dotsContainer = document.querySelector('.carousel-dots');
+
+  let currentIndex = 0;
+
+  // Generate dots
+  slides.forEach((_, idx) => {
+    const dot = document.createElement('span');
+    dot.classList.add('dot');
+    if(idx === 0) dot.classList.add('active');
+    dot.addEventListener('click', () => {
+      currentIndex = idx;
+      updateCarousel();
+    });
+    dotsContainer.appendChild(dot);
+  });
+
+  const dots = Array.from(dotsContainer.children);
+
+  function updateCarousel() {
+    const width = slides[0].getBoundingClientRect().width;
+    track.style.transform = `translateX(-${currentIndex * width}px)`;
+    dots.forEach(dot => dot.classList.remove('active'));
+    dots[currentIndex].classList.add('active');
+  }
+
+  nextButton.addEventListener('click', () => {
+    currentIndex = (currentIndex + 1) % slides.length;
+    updateCarousel();
+  });
+
+  prevButton.addEventListener('click', () => {
+    currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+    updateCarousel();
+  });
+
+  // Mobile swipe
+  let startX = 0;
+  track.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+  track.addEventListener('touchend', e => {
+    const endX = e.changedTouches[0].clientX;
+    if(startX - endX > 50) currentIndex = (currentIndex + 1) % slides.length;
+    else if(endX - startX > 50) currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+    updateCarousel();
+  });
+};
 </script>
 
 </body>
