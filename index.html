@@ -677,18 +677,14 @@
   // ------------------------------
   function toggleTests(el){
     const list = el.nextElementSibling;
-    if(list.style.display === "none"){
-      list.style.display = "block";
-    } else {
-      list.style.display = "none";
-    }
+    list.style.display = (list.style.display === "none") ? "block" : "none";
   }
 
   function showModal(){
     const modal = document.getElementById("resultModal");
     const content = document.getElementById("modalContent");
     let html = "";
-    document.querySelectorAll(".test:checked, .med-checkbox:checked").forEach(i=>{
+    document.querySelectorAll(".test:checked, .med-checkbox:checked").forEach(i => {
       html += i.dataset.name + " - Rs." + i.value + "<br>";
     });
     content.innerHTML = html || "No items selected";
@@ -696,16 +692,17 @@
   }
 
   function clearSelections(){
-    document.querySelectorAll(".test, .med-checkbox").forEach(i=>i.checked=false);
+    document.querySelectorAll(".test, .med-checkbox").forEach(i => i.checked = false);
     document.getElementById("modalContent").innerHTML = "No items selected";
   }
 
   // ------------------------------
   // Carousel Functions
   // ------------------------------
-  document.addEventListener("DOMContentLoaded", function() {
+  window.addEventListener("load", function() {
     const track = document.querySelector('.carousel-track');
     if (!track) return; // Exit if carousel not present
+
     const slides = Array.from(track.children);
     const nextButton = document.querySelector('.next');
     const prevButton = document.querySelector('.prev');
@@ -729,7 +726,7 @@
 
     function updateCarousel() {
       const width = slides[0].getBoundingClientRect().width;
-      track.style.transform = 'translateX(-' + (currentIndex * width) + 'px)';
+      track.style.transform = `translateX(-${currentIndex * width}px)`;
       dots.forEach(dot => dot.classList.remove('active'));
       dots[currentIndex].classList.add('active');
     }
@@ -745,7 +742,7 @@
       updateCarousel();
     });
 
-    // Swipe support for mobile
+    // Mobile swipe support
     let startX = 0;
     track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; });
     track.addEventListener('touchend', e => {
@@ -754,71 +751,10 @@
       else if (endX - startX > 50) currentIndex = (currentIndex - 1 + slides.length) % slides.length;
       updateCarousel();
     });
-  });
-</script>
 
-
-
-
-
-
-
-
-
-
-
-
-<script>
-window.onload = function() {
-  const track = document.querySelector('.carousel-track');
-  const slides = Array.from(track.children);
-  const nextButton = document.querySelector('.next');
-  const prevButton = document.querySelector('.prev');
-  const dotsContainer = document.querySelector('.carousel-dots');
-
-  let currentIndex = 0;
-
-  // Generate dots
-  slides.forEach((_, idx) => {
-    const dot = document.createElement('span');
-    dot.classList.add('dot');
-    if(idx === 0) dot.classList.add('active');
-    dot.addEventListener('click', () => {
-      currentIndex = idx;
-      updateCarousel();
-    });
-    dotsContainer.appendChild(dot);
-  });
-
-  const dots = Array.from(dotsContainer.children);
-
-  function updateCarousel() {
-    const width = slides[0].getBoundingClientRect().width;
-    track.style.transform = `translateX(-${currentIndex * width}px)`;
-    dots.forEach(dot => dot.classList.remove('active'));
-    dots[currentIndex].classList.add('active');
-  }
-
-  nextButton.addEventListener('click', () => {
-    currentIndex = (currentIndex + 1) % slides.length;
+    // Initialize first slide position
     updateCarousel();
   });
-
-  prevButton.addEventListener('click', () => {
-    currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-    updateCarousel();
-  });
-
-  // Mobile swipe
-  let startX = 0;
-  track.addEventListener('touchstart', e => startX = e.touches[0].clientX);
-  track.addEventListener('touchend', e => {
-    const endX = e.changedTouches[0].clientX;
-    if(startX - endX > 50) currentIndex = (currentIndex + 1) % slides.length;
-    else if(endX - startX > 50) currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-    updateCarousel();
-  });
-};
 </script>
 
 </body>
