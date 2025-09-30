@@ -657,6 +657,38 @@
 
 
   </section>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <!-- Other content of your page -->
+
+  <!-- Floating total panel for selected items -->
+  <div id="liveTotal" style="display:none">
+    <strong>Selected Items:</strong> None<br>
+    <strong>Total:</strong> Rs. 0
+    <button id="printBtn" style="margin-top:6px; padding:4px 8px; font-size:0.9rem;">Print</button>
+  </div>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 
   <!-- Floating total and print button -->
   <button id="liveTotal" onclick="showModal()">Total</button>
@@ -683,18 +715,41 @@
   function showModal(){
     const modal = document.getElementById("resultModal");
     const content = document.getElementById("modalContent");
+    let total = 0;
     let html = "";
     document.querySelectorAll(".test:checked, .med-checkbox:checked").forEach(i => {
       html += i.dataset.name + " - Rs." + i.value + "<br>";
+      total += parseInt(i.value);
     });
+    html += `<hr><strong>Total: Rs.${total}</strong>`;
     content.innerHTML = html || "No items selected";
     modal.style.display = "flex";
   }
 
   function clearSelections(){
     document.querySelectorAll(".test, .med-checkbox").forEach(i => i.checked = false);
-    document.getElementById("modalContent").innerHTML = "No items selected";
     updateLiveTotal(); // update floating total
+    document.getElementById("modalContent").innerHTML = "No items selected";
+  }
+
+  // ------------------------------
+  // Print Functions
+  // ------------------------------
+  function printSelections(){
+    let total = 0;
+    let html = "";
+    document.querySelectorAll(".test:checked, .med-checkbox:checked").forEach(i => {
+      html += i.dataset.name + " - Rs." + i.value + "<br>";
+      total += parseInt(i.value);
+    });
+    html += `<hr><strong>Total: Rs.${total}</strong>`;
+
+    const printWindow = window.open('', '', 'height=500,width=400');
+    printWindow.document.write('<html><head><title>Print</title></head><body>');
+    printWindow.document.write(html);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.print();
   }
 
   // ------------------------------
@@ -705,13 +760,13 @@
   function updateLiveTotal() {
     const selectedItems = Array.from(document.querySelectorAll(".test:checked, .med-checkbox:checked"));
     if(selectedItems.length === 0){
-      liveTotal.textContent = "No items selected";
       liveTotal.style.display = "none"; // hide if empty
+      liveTotal.innerHTML = "No items selected";
     } else {
       let total = 0;
       let names = [];
       selectedItems.forEach(i => { total += parseInt(i.value); names.push(i.dataset.name); });
-      liveTotal.innerHTML = `<strong>Selected Items:</strong> ${names.join(', ')}<br><strong>Total:</strong> Rs. ${total}`;
+      liveTotal.innerHTML = `<strong>Selected Items:</strong> ${names.join(', ')}<br><strong>Total:</strong> Rs. ${total}<br><button onclick="printSelections()">Print</button>`;
       liveTotal.style.display = "block";
     }
   }
@@ -788,7 +843,7 @@
     setInterval(() => {
       currentIndex = (currentIndex + 1) % slides.length;
       updateCarousel();
-    }, 3000); // 3 seconds
+    }, 3000);
 
     // Initialize first slide position
     updateCarousel();
