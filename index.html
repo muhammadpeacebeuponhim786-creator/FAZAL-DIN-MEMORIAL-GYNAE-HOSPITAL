@@ -694,7 +694,39 @@
   function clearSelections(){
     document.querySelectorAll(".test, .med-checkbox").forEach(i => i.checked = false);
     document.getElementById("modalContent").innerHTML = "No items selected";
+    updateLiveTotal(); // update floating total
   }
+
+  // ------------------------------
+  // Floating Total Panel
+  // ------------------------------
+  const liveTotal = document.getElementById('liveTotal');
+
+  function updateLiveTotal() {
+    const selectedItems = Array.from(document.querySelectorAll(".test:checked, .med-checkbox:checked"));
+    if(selectedItems.length === 0){
+      liveTotal.textContent = "No items selected";
+      liveTotal.style.display = "none"; // hide if empty
+    } else {
+      let total = 0;
+      let names = [];
+      selectedItems.forEach(i => { total += parseInt(i.value); names.push(i.dataset.name); });
+      liveTotal.innerHTML = `<strong>Selected Items:</strong> ${names.join(', ')}<br><strong>Total:</strong> Rs. ${total}`;
+      liveTotal.style.display = "block";
+    }
+  }
+
+  // Update floating total on checkbox change
+  document.querySelectorAll(".test, .med-checkbox").forEach(cb => {
+    cb.addEventListener('change', updateLiveTotal);
+  });
+
+  // Hide panel if click outside
+  document.addEventListener('click', (event) => {
+    if (!liveTotal.contains(event.target) && !event.target.matches('.test, .med-checkbox')) {
+      liveTotal.style.display = 'none';
+    }
+  });
 
   // ------------------------------
   // Carousel Functions
@@ -751,6 +783,12 @@
       else if (endX - startX > 50) currentIndex = (currentIndex - 1 + slides.length) % slides.length;
       updateCarousel();
     });
+
+    // Automatically change slides every 3 seconds
+    setInterval(() => {
+      currentIndex = (currentIndex + 1) % slides.length;
+      updateCarousel();
+    }, 3000); // 3 seconds
 
     // Initialize first slide position
     updateCarousel();
