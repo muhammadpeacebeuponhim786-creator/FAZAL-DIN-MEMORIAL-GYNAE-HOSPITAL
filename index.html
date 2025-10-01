@@ -1745,299 +1745,266 @@
     </div>
   </footer>
 
-  <!-- ============== SCRIPTS ============== -->
-  <script>
-    (function(){
-      'use strict';
-
-      // Year
-      const yearEl = document.getElementById('year');
-      if (yearEl) yearEl.textContent = new Date().getFullYear();
-
-      // Slideshow backgrounds for #welcome (wrapped in try/catch to avoid breaking rest of script)
-      try{
-        const welcome = document.getElementById('welcome');
-        if(welcome){
-          
-        const images = [
-        "IMG-20250904-WA0005.jpg",
-  "IMG-20250912-WA0082.jpg",
-  "IMG-20250925-WA0008.jpeg",
-  "IMG-20250925-WA0013.jpeg",
-  "IMG-20250926-WA0043.jpeg",
-  "IMG-20250926-WA0045.jpeg",
-  "IMG-20250926-WA0063.jpeg",
-  "IMG-20250926-WA0135.jpeg",
-  "IMG-20250927-WA0127.jpeg",
-  "IMG-20250917-WA0116.jpeg",
-  "IMG-20250917-WA0122.jpeg",
-  "IMG-20250918-WA0063.jpg",
-  "IMG-20250918-WA0065.jpg"
-
-          ];
-          let i=0;
-          function setBg(){
-            welcome.style.backgroundImage = `url('${images[i]}')`;
-           i=(i+1)%images.length;
-          }
-          setBg();
-          // store interval id so we can clear if needed
-          const bgInterval = setInterval(setBg,5000);
-        }
-      }catch(e){ console.warn('Welcome slideshow error', e); }
-
-      // Accordion behavior (expand/collapse, keyboard accessible)
-      document.querySelectorAll('.accordion-item').forEach(item=>{
-        const header = item.querySelector('.accordion-header');
-        const body = item.querySelector('.accordion-body');
-        const toggle = ()=>{
-          const isOpen = header.getAttribute('aria-expanded') === 'true';
-          header.setAttribute('aria-expanded', String(!isOpen));
-          body.setAttribute('aria-hidden', String(isOpen));
-          body.classList.toggle('open', !isOpen);
-        };
-        header.addEventListener('click', ()=>{
-          // single open behavior: close others
-          document.querySelectorAll('.accordion-item .accordion-body').forEach(b=>{ if(b!==body){ b.classList.remove('open'); b.setAttribute('aria-hidden','true'); b.previousElementSibling && b.previousElementSibling.setAttribute('aria-expanded','false'); }});
-          toggle();
-        });
-        header.addEventListener('keydown', (ev)=>{ if(ev.key==='Enter' || ev.key===' '){ ev.preventDefault(); header.click(); }});
-      });
-
-      // Medicine search (filters across accordion bodies)
-      const medSearch = document.getElementById('medSearch');
-      const medClearBtn = document.getElementById('medClearBtn');
-      const medItems = Array.from(document.querySelectorAll('.accordion-item .med-grid label'));
-      if(medSearch){
-        medSearch.addEventListener('input', function(){
-          const term = this.value.trim().toLowerCase();
-          medItems.forEach(label=>{
-            const text = label.textContent.toLowerCase();
-            const shown = !term || text.includes(term);
-            label.style.display = shown ? '' : 'none';
-          });
-          // Auto-open accordions that have matches, close those without matches
-          document.querySelectorAll('.accordion-item').forEach(item=>{
-            const visible = item.querySelectorAll('.med-grid label:not([style*="display: none"])').length;
-            const body = item.querySelector('.accordion-body');
-            if(visible){ body.classList.add('open'); body.setAttribute('aria-hidden','false'); item.querySelector('.accordion-header').setAttribute('aria-expanded','true'); }
-            else { body.classList.remove('open'); body.setAttribute('aria-hidden','true'); item.querySelector('.accordion-header').setAttribute('aria-expanded','false'); }
-          });
-        });
-      }
-      if(medClearBtn){
-        medClearBtn.addEventListener('click', ()=>{
-          medSearch.value = '';
-          medItems.forEach(l=> l.style.display='');
-          document.querySelectorAll('.accordion-item .accordion-body').forEach(b=>{ b.classList.remove('open'); b.setAttribute('aria-hidden','true'); b.previousElementSibling && b.previousElementSibling.setAttribute('aria-expanded','false'); });
-          computeTotal();
-        });
-      }
-
-      // Tests - select all per category and global select
-      document.querySelectorAll('#tests .select-category').forEach(check=>{
-        check.addEventListener('change', (e)=>{
-          const container = e.target.closest('div');
-          if(!container) return;
-          const checks = container.querySelectorAll('input.test');
-          checks.forEach(c=> c.checked = e.target.checked);
-          computeTotal();
-        });
-      });
-      const selectAllGlobal = document.getElementById('selectAll');
-      if(selectAllGlobal){
-        selectAllGlobal.addEventListener('change', (e)=>{
-          document.querySelectorAll('#tests input.test').forEach(c=> c.checked = e.target.checked);
-          // also toggle category selects
-          document.querySelectorAll('#tests .select-category').forEach(s=> s.checked = e.target.checked);
-          computeTotal();
-        });
-      }
-
-      // Live total computation
-      const liveText = document.getElementById('liveText');
-      function computeTotal(){
-        try{
-          const tests = Array.from(document.querySelectorAll('input.test:checked'));
-          const meds = Array.from(document.querySelectorAll('input.price-check:checked'));
-          let total = 0;
-          const items = [];
-          tests.forEach(t=>{ const v = parseInt(t.value,10)||0; total += v; items.push({type:'Test', name:t.getAttribute('data-name')||t.closest('label')?.textContent.trim(), price:v}); });
-          meds.forEach(m=>{ const v = parseInt(m.value,10)||0; total += v; items.push({type:'Medicine', name:m.getAttribute('data-name')||m.closest('label')?.textContent.trim(), price:v}); });
-          liveText.textContent = `${items.length} selected | Total: Rs. ${total}`;
-          return {total, items};
-        }catch(e){ console.warn('computeTotal error', e); return {total:0, items:[]}; }
-      }
-
-      // Bind change listeners to update total live
-      document.querySelectorAll('input.test, input.price-check').forEach(inp=> inp.addEventListener('change', ()=>{
-        computeTotal();
-      }));
-
-      // Live total click to show modal with details
-      const liveTotalEl = document.getElementById('liveTotal');
-      const resultModal = document.getElementById('resultModal');
-      const modalContent = document.getElementById('modalContent');
-      const clearAllBtn = document.getElementById('clearAllBtn');
-      const closeModalBtn = document.getElementById('closeModalBtn');
-
-      function openModal(){
-        const {total, items} = computeTotal();
-        if(items.length === 0){ modalContent.innerHTML = '<p>No items selected.</p>'; }
-        else{
-          let html = '<table class="details"><thead><tr><th>Type</th><th>Item</th><th style="text-align:right">Price (Rs.)</th></tr></thead><tbody>';
-          items.forEach(it=>{ html += `<tr><td>${it.type}</td><td>${escapeHtml(it.name)}</td><td style="text-align:right">${it.price}</td></tr>`; });
-          html += `<tr><td colspan="2" style="text-align:right;font-weight:700">Grand Total</td><td style="text-align:right;font-weight:700">${total}</td></tr>`;
-          html += '</tbody></table>';
-          modalContent.innerHTML = html;
-        }
-        resultModal.style.display = 'flex';
-      }
-      function closeModal(){ resultModal.style.display = 'none'; }
-
-      if(liveTotalEl){ liveTotalEl.addEventListener('click', openModal); }
-      if(closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
-      if(clearAllBtn){
-        clearAllBtn.addEventListener('click', ()=>{
-          document.querySelectorAll('input.test, input.price-check').forEach(i=> i.checked = false);
-          computeTotal();
-          closeModal();
-        });
-      }
-      
-      // PRINT button — rebuilds selected-items table then opens a clean print page
-const printBtn = document.getElementById('printBtn');
-if (printBtn) {
-  printBtn.addEventListener('click', () => {
-    // Recompute current selections
-    const { total, items } = computeTotal();
-
-    // Build content table
-    let contentHtml;
-    if (!items || items.length === 0) {
-      contentHtml = '<p>No items selected.</p>';
-    } else {
-      contentHtml = '<table class="details"><thead><tr><th>Type</th><th>Item</th><th style="text-align:right">Price (Rs.)</th></tr></thead><tbody>';
-      items.forEach(it => {
-        contentHtml += `<tr>
-          <td>${escapeHtml(it.type)}</td>
-          <td>${escapeHtml(it.name)}</td>
-          <td style="text-align:right">${it.price}</td>
-        </tr>`;
-      });
-      contentHtml += `<tr>
-          <td colspan="2" style="text-align:right;font-weight:700">Grand Total</td>
-          <td style="text-align:right;font-weight:700">${total}</td>
-        </tr>`;
-      contentHtml += '</tbody></table>';
-    }
-
-    // Full printable HTML (includes CSS styles inside <style>)
-    const printHtml = `<!doctype html>
-      <html class="print-page">
-        <head>
-          <meta charset="utf-8"/>
-          <title>Selected Items - Print</title>
-          <style>
-            body { font-family: Arial, Helvetica, sans-serif; color:#102028; margin:20px; }
-            h1 { font-size:20px; margin:0 0 4px; }
-            h2 { font-size:18px; margin:6px 0 10px; }
-            .meta { margin-bottom:12px; font-size:14px; color:#333; }
-            table.details { width:100%; border-collapse:collapse; }
-            table.details th, table.details td { padding:8px; border:1px solid #ddd; }
-            table.details th { background:#f4f4f4; text-align:left; }
-            @media print { body { margin:10mm; } }
-          </style>
-        </head>
-        <body>
-          <h1>FAZAL DIN MEMORIAL GYNAE HOSPITAL</h1>
-          <h2>Selected Items</h2>
-          <div class="meta">${new Date().toLocaleString()}</div>
-          ${contentHtml}
-        </body>
-      </html>`;
-
-    // Open print window
-    const w = window.open('', '_blank', 'width=900,height=700');
-    if (!w) {
-      alert('Popup blocked. Please allow popups for this site.');
-      return;
-    }
-    w.document.open();
-    w.document.write(printHtml);
-    w.document.close();
-    w.focus();
-
-    // small delay before print
-    setTimeout(() => { w.print(); }, 250);
-  });
-}
-
-
-
-
-
-
-
-
-      // Utility to escape HTML when rendering names
-      function escapeHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-      // Modal close on click outside
-      resultModal.addEventListener('click', (e)=>{ if(e.target === resultModal) closeModal(); });
-
-      // Back to top
-      const backToTop = document.getElementById('backToTop');
-      backToTop.addEventListener('click', ()=> window.scrollTo({top:0,behavior:'smooth'}));
-
-      // Initialize totals on load
-      computeTotal();
-
-    })();
-  </script>
-  
-  
-  
-  
-  <script>
-function toggleTests(categoryHeading) {
-  // Close all other test lists
-  document.querySelectorAll(".test-list").forEach(list => {
-    if (list !== categoryHeading.nextElementSibling) {
-      list.style.display = "none";
-    }
-  });
-
-  // Toggle current one
-  const testList = categoryHeading.nextElementSibling;
-  testList.style.display = (testList.style.display === "none") ? "block" : "none";
-}
-
-
-
-
-
-
-
-
+<!-- ============== SCRIPTS ============== -->
 <script>
+(function(){
+  'use strict';
+
+  <!-- ===== YEAR ===== -->
+  const yearEl = document.getElementById('year');
+  if (yearEl) yearEl.textContent = new Date().getFullYear();
+
+  <!-- ===== SLIDESHOW (WELCOME BACKGROUND) ===== -->
+  try{
+    const welcome = document.getElementById('welcome');
+    if(welcome){
+      const images = [
+        "IMG-20250904-WA0005.jpg",
+        "IMG-20250912-WA0082.jpg",
+        "IMG-20250925-WA0008.jpeg",
+        "IMG-20250925-WA0013.jpeg",
+        "IMG-20250926-WA0043.jpeg",
+        "IMG-20250926-WA0045.jpeg",
+        "IMG-20250926-WA0063.jpeg",
+        "IMG-20250926-WA0135.jpeg",
+        "IMG-20250927-WA0127.jpeg",
+        "IMG-20250917-WA0116.jpeg",
+        "IMG-20250917-WA0122.jpeg",
+        "IMG-20250918-WA0063.jpg",
+        "IMG-20250918-WA0065.jpg"
+      ];
+      let i=0;
+      function setBg(){
+        welcome.style.backgroundImage = `url('${images[i]}')`;
+        i=(i+1)%images.length;
+      }
+      setBg();
+      const bgInterval = setInterval(setBg,5000);
+    }
+  }catch(e){ console.warn('Welcome slideshow error', e); }
+
+  <!-- ===== ACCORDION (MEDICINES) ===== -->
+  document.querySelectorAll('.accordion-item').forEach(item=>{
+    const header = item.querySelector('.accordion-header');
+    const body = item.querySelector('.accordion-body');
+    const toggle = ()=>{
+      const isOpen = header.getAttribute('aria-expanded') === 'true';
+      header.setAttribute('aria-expanded', String(!isOpen));
+      body.setAttribute('aria-hidden', String(isOpen));
+      body.classList.toggle('open', !isOpen);
+    };
+    header.addEventListener('click', ()=>{
+      document.querySelectorAll('.accordion-item .accordion-body').forEach(b=>{
+        if(b!==body){
+          b.classList.remove('open');
+          b.setAttribute('aria-hidden','true');
+          b.previousElementSibling && b.previousElementSibling.setAttribute('aria-expanded','false');
+        }
+      });
+      toggle();
+    });
+    header.addEventListener('keydown', (ev)=>{
+      if(ev.key==='Enter' || ev.key===' '){ ev.preventDefault(); header.click(); }
+    });
+  });
+
+  <!-- ===== MEDICINE SEARCH ===== -->
+  const medSearch = document.getElementById('medSearch');
+  const medClearBtn = document.getElementById('medClearBtn');
+  const medItems = Array.from(document.querySelectorAll('.accordion-item .med-grid label'));
+  if(medSearch){
+    medSearch.addEventListener('input', function(){
+      const term = this.value.trim().toLowerCase();
+      medItems.forEach(label=>{
+        const text = label.textContent.toLowerCase();
+        const shown = !term || text.includes(term);
+        label.style.display = shown ? '' : 'none';
+      });
+      document.querySelectorAll('.accordion-item').forEach(item=>{
+        const visible = item.querySelectorAll('.med-grid label:not([style*="display: none"])').length;
+        const body = item.querySelector('.accordion-body');
+        if(visible){
+          body.classList.add('open'); 
+          body.setAttribute('aria-hidden','false'); 
+          item.querySelector('.accordion-header').setAttribute('aria-expanded','true');
+        } else {
+          body.classList.remove('open'); 
+          body.setAttribute('aria-hidden','true'); 
+          item.querySelector('.accordion-header').setAttribute('aria-expanded','false');
+        }
+      });
+    });
+  }
+  if(medClearBtn){
+    medClearBtn.addEventListener('click', ()=>{
+      medSearch.value = '';
+      medItems.forEach(l=> l.style.display='');
+      document.querySelectorAll('.accordion-item .accordion-body').forEach(b=>{
+        b.classList.remove('open'); 
+        b.setAttribute('aria-hidden','true'); 
+        b.previousElementSibling && b.previousElementSibling.setAttribute('aria-expanded','false');
+      });
+      computeTotal();
+    });
+  }
+
+  <!-- ===== TESTS - SELECT ALL ===== -->
+  document.querySelectorAll('#tests .select-category').forEach(check=>{
+    check.addEventListener('change', (e)=>{
+      const container = e.target.closest('div');
+      if(!container) return;
+      const checks = container.querySelectorAll('input.test');
+      checks.forEach(c=> c.checked = e.target.checked);
+      computeTotal();
+    });
+  });
+  const selectAllGlobal = document.getElementById('selectAll');
+  if(selectAllGlobal){
+    selectAllGlobal.addEventListener('change', (e)=>{
+      document.querySelectorAll('#tests input.test').forEach(c=> c.checked = e.target.checked);
+      document.querySelectorAll('#tests .select-category').forEach(s=> s.checked = e.target.checked);
+      computeTotal();
+    });
+  }
+
+  <!-- ===== TOTAL COMPUTATION ===== -->
+  const liveText = document.getElementById('liveText');
+  function computeTotal(){
+    try{
+      const tests = Array.from(document.querySelectorAll('input.test:checked'));
+      const meds = Array.from(document.querySelectorAll('input.price-check:checked'));
+      let total = 0;
+      const items = [];
+      tests.forEach(t=>{
+        const v = parseInt(t.value,10)||0;
+        total += v; 
+        items.push({type:'Test', name:t.getAttribute('data-name')||t.closest('label')?.textContent.trim(), price:v});
+      });
+      meds.forEach(m=>{
+        const v = parseInt(m.value,10)||0;
+        total += v; 
+        items.push({type:'Medicine', name:m.getAttribute('data-name')||m.closest('label')?.textContent.trim(), price:v});
+      });
+      liveText.textContent = `${items.length} selected | Total: Rs. ${total}`;
+      return {total, items};
+    }catch(e){ console.warn('computeTotal error', e); return {total:0, items:[]}; }
+  }
+  document.querySelectorAll('input.test, input.price-check').forEach(inp=> inp.addEventListener('change', computeTotal));
+
+  <!-- ===== MODAL (LIVE TOTAL & DETAILS) ===== -->
+  const liveTotalEl = document.getElementById('liveTotal');
+  const resultModal = document.getElementById('resultModal');
+  const modalContent = document.getElementById('modalContent');
+  const clearAllBtn = document.getElementById('clearAllBtn');
+  const closeModalBtn = document.getElementById('closeModalBtn');
+
+  function openModal(){
+    const {total, items} = computeTotal();
+    if(items.length === 0){ modalContent.innerHTML = '<p>No items selected.</p>'; }
+    else{
+      let html = '<table class="details"><thead><tr><th>Type</th><th>Item</th><th style="text-align:right">Price (Rs.)</th></tr></thead><tbody>';
+      items.forEach(it=>{
+        html += `<tr><td>${it.type}</td><td>${escapeHtml(it.name)}</td><td style="text-align:right">${it.price}</td></tr>`;
+      });
+      html += `<tr><td colspan="2" style="text-align:right;font-weight:700">Grand Total</td><td style="text-align:right;font-weight:700">${total}</td></tr>`;
+      html += '</tbody></table>';
+      modalContent.innerHTML = html;
+    }
+    resultModal.style.display = 'flex';
+  }
+  function closeModal(){ resultModal.style.display = 'none'; }
+
+  if(liveTotalEl) liveTotalEl.addEventListener('click', openModal);
+  if(closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+  if(clearAllBtn){
+    clearAllBtn.addEventListener('click', ()=>{
+      document.querySelectorAll('input.test, input.price-check').forEach(i=> i.checked = false);
+      computeTotal();
+      closeModal();
+    });
+  }
+
+  <!-- ===== PRINT FUNCTION ===== -->
+  const printBtn = document.getElementById('printBtn');
+  if (printBtn) {
+    printBtn.addEventListener('click', () => {
+      const { total, items } = computeTotal();
+      let contentHtml;
+      if (!items || items.length === 0) {
+        contentHtml = '<p>No items selected.</p>';
+      } else {
+        contentHtml = '<table class="details"><thead><tr><th>Type</th><th>Item</th><th style="text-align:right">Price (Rs.)</th></tr></thead><tbody>';
+        items.forEach(it => {
+          contentHtml += `<tr><td>${escapeHtml(it.type)}</td><td>${escapeHtml(it.name)}</td><td style="text-align:right">${it.price}</td></tr>`;
+        });
+        contentHtml += `<tr><td colspan="2" style="text-align:right;font-weight:700">Grand Total</td><td style="text-align:right;font-weight:700">${total}</td></tr>`;
+        contentHtml += '</tbody></table>';
+      }
+      const printHtml = `<!doctype html>
+        <html class="print-page">
+          <head>
+            <meta charset="utf-8"/>
+            <title>Selected Items - Print</title>
+            <style>
+              body { font-family: Arial, Helvetica, sans-serif; color:#102028; margin:20px; }
+              h1 { font-size:20px; margin:0 0 4px; }
+              h2 { font-size:18px; margin:6px 0 10px; }
+              .meta { margin-bottom:12px; font-size:14px; color:#333; }
+              table.details { width:100%; border-collapse:collapse; }
+              table.details th, table.details td { padding:8px; border:1px solid #ddd; }
+              table.details th { background:#f4f4f4; text-align:left; }
+              @media print { body { margin:10mm; } }
+            </style>
+          </head>
+          <body>
+            <h1>FAZAL DIN MEMORIAL GYNAE HOSPITAL</h1>
+            <h2>Selected Items</h2>
+            <div class="meta">${new Date().toLocaleString()}</div>
+            ${contentHtml}
+          </body>
+        </html>`;
+      const w = window.open('', '_blank', 'width=900,height=700');
+      if (!w) { alert('Popup blocked. Please allow popups for this site.'); return; }
+      w.document.open();
+      w.document.write(printHtml);
+      w.document.close();
+      w.focus();
+      setTimeout(() => { w.print(); }, 250);
+    });
+  }
+
+  <!-- ===== UTILITIES ===== -->
+  function escapeHtml(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  resultModal.addEventListener('click', (e)=>{ if(e.target === resultModal) closeModal(); });
+
+  const backToTop = document.getElementById('backToTop');
+  backToTop.addEventListener('click', ()=> window.scrollTo({top:0,behavior:'smooth'}));
+
+  computeTotal();
+
+})(); 
+
+<!-- ===== TESTS TOGGLE (MERGED FUNCTION) ===== -->
 function toggleTests(header) {
+  // Close all others
+  document.querySelectorAll(".test-list").forEach(list => {
+    if (list !== header.nextElementSibling) {
+      list.style.maxHeight = "0";
+      setTimeout(() => { list.style.display = "none"; }, 300);
+    }
+  });
+
+  // Smooth expand/collapse
   const testList = header.nextElementSibling;
-  
   if (testList.style.display === "none" || testList.style.display === "") {
-    // Expand with smooth effect
     testList.style.display = "block";
     testList.style.maxHeight = testList.scrollHeight + "px";
     testList.style.transition = "max-height 0.3s ease-in-out";
   } else {
-    // Collapse with smooth effect
     testList.style.maxHeight = "0";
-    setTimeout(() => {
-      testList.style.display = "none";
-    }, 300); // Wait until animation ends
+    setTimeout(() => { testList.style.display = "none"; }, 300);
   }
 }
-</script>
 </script>
 
 
